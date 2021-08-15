@@ -14,18 +14,26 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purpleAccent,
       appBar: AppBar(
         title: Text("Ürün Listeleme"),
       ),
-      body: Container(
-        child: _buildRows(context),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildSizedBox(context),
+            _buildRows(context),
+            _buildSizedBox(context),
+            _buildColumns(context),
+          ],
+        ),
       ),
     );
   }
 
   _showData() {
     return FutureBuilder(
-      future: fetchProducts(),
+      future: fetchProducts(false),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == null) {
           return Container(
@@ -34,26 +42,29 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height / 5,
-            child: ListView.builder(
-              physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: InkWell(
-                    onTap: () {
-                      print(snapshot.data[index].name);
-                    },
-                    child: Container(
+          return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return Card(
+                shadowColor: Colors.red,
+                shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width / 1.5,
+                      height: MediaQuery.of(context).size.height / 5,
                       child: Image.network(snapshot.data[index].picture),
                     ),
-                  ),
-                );
-              },
-            ),
+                    Text(snapshot.data[index].name),
+                  ],
+                ),
+              );
+            },
           );
         }
       },
@@ -62,7 +73,7 @@ class _HomePageState extends State<HomePage> {
 
   _buildRows(BuildContext context) {
     return FutureBuilder(
-      future: fetchProducts(),
+      future: fetchProducts(true),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == null) {
           return Container(
@@ -80,11 +91,17 @@ class _HomePageState extends State<HomePage> {
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {
                 return Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
                   child: InkWell(
                     onTap: () {
                       print(snapshot.data[index].name);
                     },
                     child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
                       child: Image.network(snapshot.data[index].picture),
                     ),
                   ),
@@ -98,36 +115,63 @@ class _HomePageState extends State<HomePage> {
   }
 
   _buildColumns(BuildContext context) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 8,
-      itemBuilder: (context, index) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height / 8,
-          child: Card(
+    return FutureBuilder(
+      future: fetchProducts(false),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.data == null) {
+          return Container(
             child: Center(
-              child: Text('Ürünler'),
+              child: Text("Loading...."),
             ),
-          ),
-        );
+          );
+        } else {
+          return ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, index) {
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    print(snapshot.data[index].name);
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        height: MediaQuery.of(context).size.height / 5,
+                        child: Image.network(snapshot.data[index].picture),
+                      ),
+                      Text(snapshot.data[index].name),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }
       },
     );
   }
 
   _buildSizedBox(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 40,
+      height: MediaQuery.of(context).size.height / 50,
     );
   }
 
-  Future<List<Product>> fetchProducts() async {
+  Future<List<Product>> fetchProducts(bool choose) async {
     var url = Uri.parse(
         "https://raw.githubusercontent.com/haliltirgil/peilabs_jsonfile/main/jsonArray.json");
     var response = await http.get(url);
     var jsonData = json.decode(response.body);
 
     List<Product> itemsForCategory = [];
+    List<Product> items = [];
 
     for (var pr in jsonData) {
       Product p = Product(
@@ -138,9 +182,11 @@ class _HomePageState extends State<HomePage> {
 
       if (pr["parentId"] == null) {
         itemsForCategory.add(p);
+      } else {
+        items.add(p);
       }
     }
 
-    return itemsForCategory;
+    return choose == true ? itemsForCategory : items;
   }
 }
