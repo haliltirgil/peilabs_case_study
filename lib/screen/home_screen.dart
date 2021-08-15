@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -17,12 +18,12 @@ class _HomePageState extends State<HomePage> {
         title: Text("Ürün Listeleme"),
       ),
       body: Container(
-        child: _showAllData(),
+        child: _buildRows(context),
       ),
     );
   }
 
-  _showAllData() {
+  _showData() {
     return FutureBuilder(
       future: fetchProducts(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -33,16 +34,26 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         } else {
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(snapshot.data[index].picture),
-                ),
-                title: Text(snapshot.data[index].id.toString()),
-              );
-            },
+          return SizedBox(
+            height: MediaQuery.of(context).size.height / 5,
+            child: ListView.builder(
+              physics: ClampingScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: InkWell(
+                    onTap: () {
+                      print(snapshot.data[index].name);
+                    },
+                    child: Container(
+                      child: Image.network(snapshot.data[index].picture),
+                    ),
+                  ),
+                );
+              },
+            ),
           );
         }
       },
@@ -50,20 +61,39 @@ class _HomePageState extends State<HomePage> {
   }
 
   _buildRows(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 4,
-      child: ListView.builder(
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: 4,
-          itemBuilder: (BuildContext context, int index) {
-            return Card(
-              child: Center(
-                child: Text('Kategori Alanı'),
-              ),
-            );
-          }),
+    return FutureBuilder(
+      future: fetchProducts(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.data == null) {
+          return Container(
+            child: Center(
+              child: Text("Loading...."),
+            ),
+          );
+        } else {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height / 5,
+            child: ListView.builder(
+              physics: ClampingScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: InkWell(
+                    onTap: () {
+                      print(snapshot.data[index].name);
+                    },
+                    child: Container(
+                      child: Image.network(snapshot.data[index].picture),
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -96,7 +126,8 @@ class _HomePageState extends State<HomePage> {
         "https://raw.githubusercontent.com/haliltirgil/peilabs_jsonfile/main/jsonArray.json");
     var response = await http.get(url);
     var jsonData = json.decode(response.body);
-    List<Product> items = [];
+
+    List<Product> itemsForCategory = [];
 
     for (var pr in jsonData) {
       Product p = Product(
@@ -105,9 +136,11 @@ class _HomePageState extends State<HomePage> {
           picture: pr["picture"],
           name: pr["name"]);
 
-      items.add(p);
+      if (pr["parentId"] == null) {
+        itemsForCategory.add(p);
+      }
     }
 
-    return items;
+    return itemsForCategory;
   }
 }
