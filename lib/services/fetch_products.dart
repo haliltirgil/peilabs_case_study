@@ -53,16 +53,16 @@ Future<List<Product>> fetchProducts(int index) async {
     case 2:
       return itemsForKitchen;
       break;
-    case 3:
+    case 4:
       return itemsForMajorAppliance;
       break;
-    case 4:
+    case 8:
       return itemsForFurniture;
       break;
-    case 5:
+    case 11:
       return itemsForDecoration;
       break;
-    case 6:
+    case 12:
       return itemsForGardenTools;
       break;
 
