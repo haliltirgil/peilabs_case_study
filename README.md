@@ -1,16 +1,17 @@
-# peilabs_project
+# APP
 
-A new Flutter project.
+- [JSON Source](https://github.com/haliltirgil/peilabs_jsonfile)
+- [Mobile App](https://github.com/haliltirgil/peilabs_case_study)
 
-## Getting Started
+This project material contains lots of products and different types. Products properties are storing in a JSON file. 
 
-This project is a starting point for a Flutter application.
+This application make parse JSON file and list on the screen by use HTTP methods. 
 
-A few resources to get you started if this is your first Flutter project:
+# Addition
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Shows the photo on the screen when click the product card.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The application develope to be responsive.
+
+# UI 
+
