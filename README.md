@@ -15,13 +15,13 @@ The application develope to be responsive.
 
 # UI 
 
-# Horizontal and Vertical List 
+Horizontal and Vertical List 
 ![move](https://user-images.githubusercontent.com/56155975/129801252-75cfefc6-3cbc-40e5-8032-6619ea66822e.gif)
 
-# Specific Product List
+Specific Product List
 ![specificCategory](https://user-images.githubusercontent.com/56155975/129801755-a924b543-71c9-441e-8151-c8a1c5ce1897.gif)
 
-# Click Card For Show Photo
+Click Card For Show Photo
 ![openPhoto](https://user-images.githubusercontent.com/56155975/129801830-41aecca0-5201-4c66-a335-3fb78632fddb.gif)
 
 
