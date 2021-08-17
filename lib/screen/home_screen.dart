@@ -22,9 +22,9 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             _buildSizedBox(context),
-            _buildRows(context),
+            _buildRows(context, 1),
             _buildSizedBox(context),
-            _buildColumns(context),
+            _buildColumns(context, 5),
           ],
         ),
       ),
@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
 
   _showData() {
     return FutureBuilder(
-      future: fetchProducts(false),
+      future: fetchProducts(1),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == null) {
           return Container(
@@ -71,9 +71,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _buildRows(BuildContext context) {
+  _buildRows(BuildContext context, int index) {
     return FutureBuilder(
-      future: fetchProducts(true),
+      future: fetchProducts(index),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == null) {
           return Container(
@@ -114,9 +114,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _buildColumns(BuildContext context) {
+  _buildColumns(BuildContext context, int index) {
     return FutureBuilder(
-      future: fetchProducts(false),
+      future: fetchProducts(index),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.data == null) {
           return Container(
@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<List<Product>> fetchProducts(bool choose) async {
+  Future<List<Product>> fetchProducts(int index) async {
     var url = Uri.parse(
         "https://raw.githubusercontent.com/haliltirgil/peilabs_jsonfile/main/jsonArray.json");
     var response = await http.get(url);
@@ -172,6 +172,11 @@ class _HomePageState extends State<HomePage> {
 
     List<Product> itemsForCategory = [];
     List<Product> items = [];
+    List<Product> itemsForKitchen = [];
+    List<Product> itemsForMajorAppliance = [];
+    List<Product> itemsForFurniture = [];
+    List<Product> itemsForDecoration = [];
+    List<Product> itemsForGardenTools = [];
 
     for (var pr in jsonData) {
       Product p = Product(
@@ -182,11 +187,49 @@ class _HomePageState extends State<HomePage> {
 
       if (pr["parentId"] == null) {
         itemsForCategory.add(p);
-      } else {
+      }
+      if (pr["parentId"] == 2) {
+        itemsForKitchen.add(p);
+      }
+      if (pr["parentId"] == 4) {
+        itemsForMajorAppliance.add(p);
+      }
+      if (pr["parentId"] == 8) {
+        itemsForFurniture.add(p);
+      }
+      if (pr["parentId"] == 11) {
+        itemsForDecoration.add(p);
+      }
+      if (pr["parentId"] == 12) {
+        itemsForGardenTools.add(p);
+      }
+      if (pr["parentId"] != null) {
         items.add(p);
       }
     }
 
-    return choose == true ? itemsForCategory : items;
+    switch (index) {
+      case 1:
+        return itemsForCategory;
+        break;
+      case 2:
+        return itemsForKitchen;
+        break;
+      case 3:
+        return itemsForMajorAppliance;
+        break;
+      case 4:
+        return itemsForFurniture;
+        break;
+      case 5:
+        return itemsForDecoration;
+        break;
+      case 6:
+        return itemsForGardenTools;
+        break;
+
+      default:
+        return items;
+    }
   }
 }
