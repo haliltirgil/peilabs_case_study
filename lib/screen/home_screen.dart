@@ -12,7 +12,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purpleAccent,
+      backgroundColor: Colors.deepOrangeAccent,
       appBar: AppBar(
         title: Text("Ürün Listeleme"),
         centerTitle: true,
@@ -134,7 +134,17 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            contentPadding: EdgeInsets.all(0.0),
+                            insetPadding: EdgeInsets.all(0.0),
+                            content:
+                                Image.network(snapshot.data[index].picture),
+                          ),
+                        );
+                      },
                       child: Row(
                         children: [
                           Container(
@@ -143,7 +153,11 @@ class _HomePageState extends State<HomePage> {
                             height: MediaQuery.of(context).size.height / 5,
                             child: Image.network(snapshot.data[index].picture),
                           ),
-                          Text(snapshot.data[index].name),
+                          Text(snapshot.data[index].name,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w900)),
                         ],
                       ),
                     ),
@@ -187,47 +201,7 @@ class _HomePageState extends State<HomePage> {
     return Text(name,
         style: TextStyle(
           fontSize: 21,
-          color: Colors.grey[400],
+          color: Colors.white,
         ));
   }
-}
-
-Widget _showData(int index) {
-  return FutureBuilder(
-    future: fetchProducts(index),
-    builder: (BuildContext context, AsyncSnapshot snapshot) {
-      if (snapshot.data == null) {
-        return Container(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      } else {
-        return ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, index) {
-            return Card(
-              shadowColor: Colors.red,
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: MediaQuery.of(context).size.width / 1.5,
-                    height: MediaQuery.of(context).size.height / 5,
-                    child: Image.network(snapshot.data[index].picture),
-                  ),
-                  Text(snapshot.data[index].name),
-                ],
-              ),
-            );
-          },
-        );
-      }
-    },
-  );
 }

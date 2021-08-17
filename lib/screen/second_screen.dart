@@ -9,9 +9,9 @@ class SecondPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purpleAccent,
+      backgroundColor: Colors.deepOrangeAccent,
       appBar: AppBar(
-        title: Text("Ürün Listeleme"),
+        title: Text("Ürünler"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -48,19 +48,20 @@ class SecondPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    child: InkWell(
-                      onTap: () {},
-                      child: Row(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width / 1.5,
-                            height: MediaQuery.of(context).size.height / 5,
-                            child: Image.network(snapshot.data[index].picture),
-                          ),
-                          Text(snapshot.data[index].name),
-                        ],
-                      ),
+                    child: Row(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width / 1.5,
+                          height: MediaQuery.of(context).size.height / 5,
+                          child: Image.network(snapshot.data[index].picture),
+                        ),
+                        Text(snapshot.data[index].name,
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w900)),
+                      ],
                     ),
                   );
                 },
@@ -99,7 +100,7 @@ class SecondPage extends StatelessWidget {
       name,
       style: TextStyle(
         fontSize: 21,
-        color: Colors.grey[400],
+        color: Colors.white,
       ),
     );
   }
